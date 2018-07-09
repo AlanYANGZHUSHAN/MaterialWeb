@@ -1,0 +1,42 @@
+CREATE TABLE IF NOT EXISTS user_info
+(
+username varchar(255) not null primary key,
+password varchar(255) not null,
+position varchar(255) default null,
+record BOOLEAN default 0,
+query BOOLEAN default 0,
+manager BOOLEAN default 0
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS material_info
+(
+id int primary key auto_increment,
+materialname varchar(255) not null,
+manufacturer varchar(255) not null,
+level varchar(255) default null,
+color varchar(255) default null,
+width int default null,
+thick int default null
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE IF NOT EXISTS material_use
+(
+id int not null,
+action varchar(255) not null,
+amount int not null,
+batch_number varchar(255) not null,
+operator varchar(255) not null,
+time timestamp not null default current_timestamp
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS material_sum
+(
+id int not null,
+insum int not null,
+outsum int not null,
+sum int not null,
+time timestamp not null default current_timestamp ON UPDATE CURRENT_TIMESTAMP
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

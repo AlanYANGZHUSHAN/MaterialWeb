@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>注册界面</title>
+    <link href="../static/css/login.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+    <div class="wrapper" id="user">
+	<div class="loginBox">
+	    <div class="loginBoxCenter">
+		<p><label for="username">用户名：</label></p>
+                <!--autofocus 规定当页面加载时按钮应当自动地获得焦点。 -->
+                <!-- placeholder提供可描述输入字段预期值的提示信息-->
+                <p><input type="text" id="username" name="username" class="loginInput" autofocus="autofocus" required="required" autocomplete="off" v-model= "username" placeholder="请输入邮箱/手机号" value="" /></p>
+                <!-- required 规定必需在提交之前填写输入字段-->
+                <p><label for="password">密码：</label></p>
+                <p><input type="password" id="password" name="password" class="loginInput" required="required" v-model= "password" placeholder="请输入密码" value="" /></p>
+                <p><label for="position">职位：</label></p>
+                <p><input type="text" id="position" name="position" class="loginInput" required="required" v-model= "position" placeholder="请输入职位" value="" /></p>
+            </div>
+            <div class="loginBoxButtons">
+	        <button class="loginBtn" @click= "register()">注册</button>
+	    </div>
+        </div>
+    </div>
+</body>
+<script src = "../static/scripts/vue/vue.js"></script>
+<script src = "../static/scripts/jquery/jquery.min.js"></script>
+<script src = "../static/scripts/bootstrap/bootstrap.min.js"></script>
+<script src = "../static/js/user.js"></script>
+
+
+</html>

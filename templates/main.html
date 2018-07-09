@@ -1,0 +1,364 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>公司管理</title>
+    <link href="../static/css/login.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+    <div class="container" id="user">
+        <div class="right">
+            <table style="font-size:30px;table-layout:fixed;width:100%;margin:auto">
+		<tr>
+		    <td align= "center">
+			    <a>Hi, {{username}}</a>
+	            </td>
+		</tr>	
+                <tr>
+                    <td align = "center">
+			    <div v-show = {{manager}}>
+			    <button style = "width: 150px;height: 30px;font-size: 15px;" @click= "showmanager()">账号管理</button>
+			</div>
+                    </td>
+	        </tr>
+	        </tr>
+                    <td align = "center">
+			    <div v-show = {{record}}>
+			    <button style = "width: 150px;height: 30px;font-size: 15px;" @click= "showrecord()">材料记录</button>
+			</div>
+		    </td>
+                <tr>
+		</tr>
+                    <td align = "center">
+			    <div v-show = {{query}}>
+			    <button style = "width: 150px;height: 30px;font-size: 15px;" @click= "showquery()">仓储汇总</button>
+			</div>
+		    </td>
+                <tr>
+	    </table>
+        </div>
+        <div class = "left" v-show = "isShowManager">
+            <table style="font-size:30px;table-layout:fixed;width:100%;margin:auto">
+                <tr>
+                    <td align = "center" colspan = "2">
+			<label>人员信息处理</label>
+                    </td>
+	        </tr>
+                <tr>
+                    <td align = "center">
+			<label>用户名：</label>
+                    </td>
+                    <td align = "center">
+			<select style ="width: 150px;height: 30px;font-size: 20px;border:0px solid red;background-color:transparent;" @change="selectuser">
+			    <option>--select user--</option>
+			    <option v-for= "(item,index) in user_list" v-bind:value="index"><%item.username%></option>
+			</select>
+                    </td>
+	        </tr>
+                <tr>
+                    <td align = "center">
+			<label>密 码：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "topassword"  type="text" placeholder= "请输入密码"/>
+                    </td>
+	        </tr>
+                <tr>
+                    <td align = "center">
+			<label>职位：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "toposition"  type="text" placeholder= "请输入职位"/>
+                    </td>
+	        </tr>
+                <tr>
+                    <td align = "center">
+			<label>记录权限：</label>
+                    </td>
+                    <td align = "center">
+		        <select style ="width: 150px;height: 30px;font-size: 15px;" v-model= "torecord">
+			    <option value= 1>是</option>
+			    <option value= 0>否</option>
+		        </select>
+                    </td>
+	        </tr>
+                <tr>
+                    <td align = "center">
+			<label>查询权限：</label>
+                    </td>
+                    <td align = "center">
+		        <select style ="width: 150px;height: 30px;font-size: 15px;" v-model= "toquery">
+			    <option value= 1>是</option>
+			    <option value= 0>否</option>
+		        </select>
+                    </td>
+	        </tr>
+                <tr>
+                    <td align = "center">
+			<label>管理权限：</label>
+                    </td>
+                    <td align = "center">
+		        <select style ="width: 150px;height: 30px;font-size: 15px;" v-model= "tomanager">
+			    <option value= 1>是</option>
+			    <option value= 0>否</option>
+		        </select>
+                    </td>
+	        </tr>
+		<tr>
+                    <td align = "center">
+		        <button @click = "setRight()" style="width: 150px;height: 30px;font-size: 15px;">修改</button>
+		    </td>
+                    <td align = "center">
+		        <button @click = "deleteUser()" style="width: 150px;height: 30px;font-size: 15px;">删除</button>
+		    </td>
+		</tr>
+                <tr>
+                    <td align = "center" colspan = "2">
+			<label>材料信息添加</label>
+                    </td>
+	        </tr>
+		<tr>
+                    <td align = "center">
+			<label>材料名称：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "materialname"  type="text" placeholder= "请输入材料名称"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>生产厂商：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "manufacturer"  type="text" placeholder= "请输入生产厂商"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>材料级别：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "level"  type="text" placeholder= "请输入材料级别"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>材料颜色：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "color"  type="text" placeholder= "请输入材料颜色"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>材料宽幅：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "width"  type="text" placeholder= "请输入材料宽幅"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>材料厚度：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "thick"  type="text" placeholder= "请输入材料厚度"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+		        <button @click = "addMaterial()" style="width: 150px;height: 30px;font-size: 15px;">添加</button>
+		    </td>
+                    <td align = "center">
+		        <button @click = "closeSetRight()" style="width: 150px;height: 30px;font-size: 15px;">关闭</button>
+		    </td>
+		</tr>
+	    </table>
+	</div>
+        <div class = "left" v-show = "isShowRecord">
+            <table style="font-size:30px;table-layout:fixed;width:100%;margin:auto">
+                <tr>
+                    <td align = "center" colspan = "2">
+			<label>材料信息</label>
+                    </td>
+	        </tr>
+		<tr>
+                    <td align = "center">
+			<label>材料名称：</label>
+		    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "materialname"  type="text" readonly="true"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>生产厂商：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "manufacturer"  type="text" readonly="true"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>材料级别：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "level"  type="text" readonly="true"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>材料颜色：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "color"  type="text" readonly="true"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>材料宽幅：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "width"  type="text" readonly="true"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>材料厚度：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "thick"  type="text" readonly="true"/>
+                    </td>
+		</tr>
+                <tr>
+                    <td align = "center" colspan = "2">
+			<label>库存操作</label>
+                    </td>
+	        </tr>
+		<tr>
+                    <td align = "center">
+			<label>材料编号：</label>
+                    </td>
+                    <td align = "center">
+			<select style ="width: 150px;height: 30px;font-size: 20px;border:0px solid red;background-color:transparent;" @change="selectmaterial">
+			    <option v-for= "(item,index) in material_list" v-bind:value="index"><%item.ID%></option>
+			</select>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>入库出库：</label>
+                    </td>
+                    <td align = "center">
+		        <select style ="width: 150px;height: 30px;font-size: 15px;" v-model= "direction">
+			    <option value= "in">入库</option>
+			    <option value= “out”>出库</option>
+		        </select>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>材料数量：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "amount"  type="text" placeholder="请输入材料数量"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>材料单号：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "batch_number"  type="text" placeholder= "请输入材料单号"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+		        <button @click = "storageaction()" style="width: 150px;height: 30px;font-size: 15px;">提交</button>
+		    </td>
+                    <td align = "center">
+		        <button @click = "closerecord()" style="width: 150px;height: 30px;font-size: 15px;">关闭</button>
+		    </td>
+		</tr>
+	    </table>
+	</div>
+        <div class = "left" v-show = "isShowQuery">
+            <table style="font-size:30px;table-layout:fixed;width:100%;margin:auto">
+	        <tr>
+		    <th align= "right"></th>
+		    <th align= "center">编号</th>
+		    <th align= "center">名称</th>
+		    <th align= "center">厂商</th>
+		    <th align= "center">级别</th>
+		    <th align= "center">颜色</th>
+		    <th align= "center">宽度</th>
+		    <th align= "center">厚度</th>
+		</tr>
+		<tr v-for = "(item,index) in material_list">
+		    <td align="right"><input type="checkbox" @change="checkid(index)"></td>
+		    <td><%item.ID%></td>
+		    <td><%item.materialname%></td>
+		    <td><%item.manufacturer%></td>
+		    <td><%item.level%></td>
+		    <td><%item.color%></td>
+		    <td><%item.width%></td>
+		    <td><%item.thick%></td>
+		</tr>
+		<tr>
+                    <td align = "center" colspan="4">
+		        <button @click = "materialrest()" style="width: 150px;height: 30px;font-size: 15px;">提交</button>
+		    </td>
+                    <td align = "center" colspan="4" >
+		        <button @click = "closequery()" style="width: 150px;height: 30px;font-size: 15px;">关闭</button>
+		    </td>
+		</tr>
+
+	    </table>
+            <table style="font-size:30px;table-layout:fixed;width:100%;margin:auto">
+	        <tr>
+		    <th align= "center">编号</th>
+		    <th align= "center">入库总</th>
+		    <th align= "center">出库总</th>
+		    <th align= "center">库存总</th>
+		</tr>
+		<tr v-for = "(item,index) in sum_list">
+		    <td><%item.id%></td>
+		    <td @click= "getdetail(index,'in')"><u><%item.insum%></u></td>
+		    <td @click= "getdetail(index,'out')"><u><%item.outsum%></u></td>
+		    <td><%item.sum%></td>
+		</tr>
+	    </table>
+	    <div class="ShowDetail" v-show="isShowDetail">
+
+		<table style="font-size:15px;table-layout:fixed;width:100%;margin:auto">
+		    <tr>
+		        <th>编号</th>
+		        <th>数量</th>
+	        	<th>单号</th>
+			<th>操作人</th>
+			<th>操作时间</th>
+		    </tr>
+		    <tr v-for="(item,index) in detail_list">
+			<td><%item.id%></td>
+			<td><%item.amount%></td>
+			<td><%item.batch_number%></td>
+			<td><%item.operator%></td>
+			<td><%item.time%></td>
+		    </tr>
+		    <tr>
+			<td align = "center" colspan="5">
+		            <button @click = "closedetail()" style="width: 150px;height: 30px;font-size: 15px;">关闭</button>
+		        </td>
+		    </tr>
+		</table>
+	    </div>
+	</div>
+
+    </div>
+</body>
+<script src = "../static/scripts/vue/vue.js"></script>
+<script src = "../static/scripts/jquery/jquery.min.js"></script>
+<script src = "../static/scripts/bootstrap/bootstrap.min.js"></script>
+<script src = "../static/js/user.js"></script>
+
+</html>
