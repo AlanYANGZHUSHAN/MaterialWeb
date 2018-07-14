@@ -53,6 +53,7 @@ var vue = {
 	    direction    :'入库',
 	    amount       :0,
 	    batch_number :'',
+	    inner_number :'',
 	    id_list      :[],
 	    sum_list     :[],
 	    detail_list  :[],
@@ -305,7 +306,7 @@ var vue = {
                     type : 'post',
                     dataType : 'json',
                     url :  starturl + apiurl.storageactionUrl,
-                    data: JSON.stringify({action:'storage',id:_storageActionThis.id,direction:_storageActionThis.direction,amount:_storageActionThis.amount,batch_number:_storageActionThis.batch_number}),
+                    data: JSON.stringify({action:'storage',id:_storageActionThis.id,direction:_storageActionThis.direction,amount:_storageActionThis.amount,batch_number:_storageActionThis.batch_number,inner_number:_storageActionThis.inner_number}),
                     success:function(response){
                         var status = response['status'];
                         if(status == 'SUCCESS'){

@@ -49,7 +49,7 @@
 			<label>用户名：</label>
                     </td>
                     <td align = "center">
-			<select style ="width: 150px;height: 30px;font-size: 20px;border:0px solid red;background-color:transparent;" @change="selectuser">
+			<select style ="width: 150px;height: 30px;font-size: 20px;border:0px solid red;" @change="selectuser">
 			    <option>--select user--</option>
 			    <option v-for= "(item,index) in user_list" v-bind:value="index"><%item.username%></option>
 			</select>
@@ -240,7 +240,7 @@
 			<label>材料编号：</label>
                     </td>
                     <td align = "center">
-			<select style ="width: 150px;height: 30px;font-size: 20px;border:0px solid red;background-color:transparent;" @change="selectmaterial">
+			<select style ="width: 150px;height: 30px;font-size: 20px;border:0px solid red;" @change="selectmaterial">
 			    <option v-for= "(item,index) in material_list" v-bind:value="index"><%item.ID%></option>
 			</select>
                     </td>
@@ -266,10 +266,18 @@
 		</tr>
 		<tr>
                     <td align = "center">
-			<label>材料单号：</label>
+			<label>收料单号：</label>
                     </td>
                     <td align = "center">
-                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "batch_number"  type="text" placeholder= "请输入材料单号"/>
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "batch_number"  type="text" placeholder= "请输入收料单号"/>
+                    </td>
+		</tr>
+		<tr>
+                    <td align = "center">
+			<label>领料单号：</label>
+                    </td>
+                    <td align = "center">
+                        <input style="width: 150px;height: 30px;font-size: 15px;" v-model= "inner_number"  type="text" placeholder= "请输入领料单号"/>
                     </td>
 		</tr>
 		<tr>
@@ -334,7 +342,8 @@
 		    <tr>
 		        <th>编号</th>
 		        <th>数量</th>
-	        	<th>单号</th>
+	        	<th>收料单号</th>
+	        	<th>领料单号</th>
 			<th>操作人</th>
 			<th>操作时间</th>
 		    </tr>
@@ -342,6 +351,7 @@
 			<td><%item.id%></td>
 			<td><%item.amount%></td>
 			<td><%item.batch_number%></td>
+			<td><%item.inner_number%></td>
 			<td><%item.operator%></td>
 			<td><%item.time%></td>
 		    </tr>

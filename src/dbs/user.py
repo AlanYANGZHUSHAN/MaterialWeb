@@ -210,6 +210,8 @@ class DBINIT(object):
         res = {}
         res['status'] = 'FAIL'
         res['msg'] = ''
+        if not req["operator"]:
+            req["operator"] = 'boss'
         try:
             with self.conn_user as cur:
                 sql_select_cmd = "select * from material_sum where id=%s"
@@ -225,17 +227,26 @@ class DBINIT(object):
                     return res
                 sql_update_cmd = "update material_sum set insum= %s,outsum=%s,sum=%s where id=%s"
                 cur.execute(sql_update_cmd,params)
-                sql_insert_cmd = "insert into material_use(id,action,amount,batch_number,operator) values(%s,%s,%s,%s,%s)"
-                params = [req['id'],req['direction'],req['amount'],req['batch_number'],req['operator']]
+                sql_select_cmd = "select batch_rest from material_use where id=%s and batch_number=%s and time=(select max(time) from material_use where id=%s and batch_number=%s)"
+                params = [req['id'],req['batch_number'],req['id'],req['batch_number']]
+                cur.execute(sql_select_cmd,params)
+                if req['direction'] == 'out':
+                    req['batch_rest'] = cur.fetchone()['batch_rest'] - req['amount']
+                else:
+                    req['batch_rest'] = req['amount']
+                if req['batch_rest'] <0:
+                    res['msg'] += 'stroage batch number %s not enough'%req['batch_number']
+                    return res
+                sql_insert_cmd = "insert into material_use(id,action,amount,batch_number,inner_number,operator,batch_rest) values(%s,%s,%s,%s,%s,%s,%s)"
+                params = [req['id'],req['direction'],req['amount'],req['batch_number'],req['inner_number'],req['operator'],req['batch_rest']]
                 cur.execute(sql_insert_cmd,params)
             res['status'] = 'SUCCESS'
         except Exception as e:
             res['msg'] += str(e)
-            logging.info('storage action is fail')
+            logging.info('storage %s action is fail'%req['direction'])
         return res
 
     def material_rest(self,req):
-
         res = {}
         res['status'] = 'FAIL'
         res['msg'] = ''
@@ -245,7 +256,7 @@ class DBINIT(object):
             res['result'][id_item] ={'in':[],'out':[],'insum':0,'outsum':0,'sum':0}
         try:
             with self.conn_user as cur:
-                sql_insert_cmd = "select * from material_use where id in (%s)"% ','.join(['%s'] * len(req['id_list']))
+                sql_insert_cmd = "select * from material_use where id in (%s)"%','.join(['%s'] * len(req['id_list']))
                 params = req['id_list']
                 cur.execute(sql_insert_cmd,params)
                 for item in cur.fetchall():
